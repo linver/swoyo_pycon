@@ -1,28 +1,27 @@
 import pyxel
 import pyxelcyrillic
-import time
 
 from pyxel_extensions.actions import action
 from pyxel_extensions.game import Game
 from pyxel_extensions.scene import Scene
-from constants import character_map_str, prizes, borders
+from constants import character_map_str, borders
 
 # !!!! change 'pyxel.init(160, 120)' string to 'pass' in init_pyxel() in pyxel-extensions/pyxel_extensions/game.py
 #    def init_pyxel(self):
 #       pyxel.init(160, 120) ==> pass
 
 
-class Example(Game):
+class Start(Game):
     def __init__(self, initial_state, initial_scene, width, height):
         super().__init__(initial_state, initial_scene)
         pyxel.init(width, height, title='SWOYO game')
         pyxel.load("swoyo.pyxres")
 
     def get_scenes(self):
-        return ExampleScene,
+        return SwoyoGame,
 
 
-class ExampleScene(Scene):
+class SwoyoGame(Scene):
     def update(self):
         buff = 0
 
@@ -30,13 +29,13 @@ class ExampleScene(Scene):
             if k.startswith('KEY_'):
                 if pyxel.btn(pyxel.KEY_SHIFT):
                     buff += 1
-                if pyxel.btn(pyxel.KEY_BACKSPACE):
-                    print(str(self.store.state['email']))
+                if pyxel.btnp(pyxel.KEY_BACKSPACE):
                     self.store.state['email'] = self.store.state['email'][:-1]
                     self.store.state['count'] = 0
                     buff = 0
-                if pyxel.btn(pyxel.KEY_RETURN):
+                if pyxel.btnp(pyxel.KEY_RETURN):
                     self.store.state['result'] = True
+                    self.save_email('emails.txt')
                     break
                 if pyxel.btnp(pyxel.KEY_SPACE):
                     self.store.state["result"] = ''
@@ -72,13 +71,13 @@ class ExampleScene(Scene):
             self.command_restart(220, 180, 7)
 
     @staticmethod
-    def text_with_border( x, y, s, col, bcol):
+    def text_with_border(x, y, s, col, bcol):
         for x_offset, y_offset in borders:
             pyxel.text(x + x_offset, y + y_offset, s, bcol)
         pyxel.text(x, y, s, col)
 
     @staticmethod
-    def text_with_border_cyrillic( x, y, s, col, bcol):
+    def text_with_border_cyrillic(x, y, s, col, bcol):
         for x_offset, y_offset in borders:
             pyxelcyrillic.text(s, x + x_offset, y + y_offset, bcol)
         pyxelcyrillic.text(s, x, y, col)
@@ -129,6 +128,10 @@ class ExampleScene(Scene):
         offset = pyxel.sin(pyxel.frame_count * 5.73)
         pyxel.blt(x + offset, y, 0, 24, 16, 68, 16, 13)
 
+    def save_email(self, filename):
+        with open(filename, 'a+') as f:
+            f.write(self.store.state['email'] + '\n')
+
 
 @action
 def count_identical_letters(state):
@@ -137,9 +140,9 @@ def count_identical_letters(state):
 
 if __name__ == '__main__':
     while True:
-        Example(
+        Start(
             initial_state={'count': 0, 'email': '', 'result': False},
-            initial_scene=ExampleScene,
+            initial_scene=SwoyoGame,
             width=384,
             height=200
         ).run()
