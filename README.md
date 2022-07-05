@@ -7,7 +7,7 @@
 * установить git (https://git-scm.com/downloads)
 * установить PyCharm Community (https://www.jetbrains.com/pycharm/download/#section=windows) - опционально, можно запускать через консоль
 
-
+0. открыть Git Bash (можно и Windows PowerShell)
 1. клонировать данный репозиторий к себе в проект (перейти в папку с проектом, в терминале ввести `git clone https://github.com/linver/swoyo_pycon.git`)
 2. установить библиотеку pyxel (pip install pyxel) 
 3. установить библиотеку pyxel-extensions (перейти в директорию /swoyo_pycon в папке проекта и ввести в терминале `pip install -e git+https://github.com/gediminasz/pyxel-extensions.git@v0.0.2#egg=pyxel_extensions`):
